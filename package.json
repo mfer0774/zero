@@ -1,0 +1,22 @@
+{
+  "name": "zero",
+  "version": "1.0.0",
+  "description": "Why not",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matt-yost/zero.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matt-yost/zero/issues"
+  },
+  "homepage": "https://github.com/matt-yost/zero#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.6.0"
+  }
+}
