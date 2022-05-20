@@ -34,16 +34,9 @@ contract Zero is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ownable {
     }
 
     function mint() public {
-        // Get current tokenId
         uint256 newItemId = _tokenIdCounter.current();
-
-        // Mint the token
         _safeMint(msg.sender, newItemId);
-
-        // Set the data
         _setTokenURI(newItemId, "https://jsonkeeper.com/b/GVNT");
-
-        //Increment counter
         _tokenIdCounter.increment();
 
         console.log("An NFT w/ ID %s has been minted to %s", newItemId, msg.sender);
