@@ -8,12 +8,14 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
+import "hardhat/console.sol";
+
 contract Zero is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
 
-    constructor() ERC721("zero", "zro") {}
+    constructor() ERC721("Zero", "ZRO") {}
 
     function pause() public onlyOwner {
         _pause();
@@ -23,19 +25,28 @@ contract Zero is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ownable {
         _unpause();
     }
 
-    function safeMint(address to, string memory uri) public onlyOwner {
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
-        _setTokenURI(tokenId, uri);
-    }
-
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
         internal
         whenNotPaused
         override(ERC721, ERC721Enumerable)
     {
         super._beforeTokenTransfer(from, to, tokenId);
+    }
+
+    function mint() public {
+        // Get current tokenId
+        uint256 newItemId = _tokenIdCounter.current();
+
+        // Mint the token
+        _safeMint(msg.sender, newItemId);
+
+        // Set the data
+        _setTokenURI(newItemId, "https://jsonkeeper.com/b/GVNT");
+
+        //Increment counter
+        _tokenIdCounter.increment();
+
+        console.log("An NFT w/ ID %s has been minted to %s", newItemId, msg.sender);
     }
 
     // The following functions are overrides required by Solidity.

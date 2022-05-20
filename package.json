@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/matt-yost/zero#readme",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.6.0"
+    "@openzeppelin/contracts": "^4.6.0",
+    "dotenv": "^16.0.1"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.6",
