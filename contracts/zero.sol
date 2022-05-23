@@ -15,7 +15,35 @@ contract Zero is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
-    string baseSvg = "<svg viewBox='0 0 350 350' fill='none' role='img' xmlns='http://www.w3.org/2000/svg' width='350' height='350'>";
+    uint public maxSupply = 42;
+    uint public maxMint = 2;
+    uint public numTokensMinted;
+
+    string[22] private firstNames = ["","","","","","","","","","","","","","","","","","","","","",""];
+    string[22] private lastNames = ["","","","","","","","","","","","","","","","","","","","","",""];
+    string[5] private colors = ["","","","",""];
+
+    function random(string memory input) internal pure returns (uint256) {
+        return uint256(keccak256(abi.encodePacked(input)));
+    }
+
+    function getRandomColor() {
+
+    }
+
+    function getSVG() internal view returns (string memory) {
+        string svgOne = "<svg viewBox='0 0 90 90' fill='none' role='img' xmlns='http://www.w3.org/2000/svg' width='350' height='350'>";
+        string svgTwo = "<mask id='mask' maskUnits='userSpaceOnUse' x='0' y='0' width='90' height='90'><rect width='90' height='90' rx='180' fill='#FFFFFF'></rect></mask><g mask='url(#mask)'>";
+        string svgThree = string("<path d='M0 0h90v45H0z' fill='", getRandomColor(), "'></path>");
+        string svgFour = string("<path d='M0 45h90v45H0z' fill='", getRandomColor(), "'></path>");
+        string svgFive = string("<path d='M83 45a38 38 0 00-76 0h76z' fill='", getRandomColor(), "'></path>");
+        string svgSix = string("<path d='M83 45a38 38 0 01-76 0h76z' fill='", getRandomColor(), "'></path>");
+        string svgSeven = string("<path d='M77 45a32 32 0 10-64 0h64z' fill='", getRandomColor(), "'></path>");
+        string svgEight = string("<path d='M77 45a32 32 0 11-64 0h64z' fill='", getRandomColor(), "'></path>");
+        string svgNine = string("<path d='M71 45a26 26 0 00-52 0h52z' fill='", getRandomColor(), "'></path>");
+        string svgTen = string("<path d='M71 45a26 26 0 01-52 0h52z' fill='", getRandomColor(), "'></path>");
+        string svgEleven = string("<circle cx='45' cy='45' r='23' fill='", getRandomColor(), "'></circle></g></svg>");
+    }
 
     constructor() ERC721("Zero", "ZRO") {}
 
