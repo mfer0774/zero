@@ -17,9 +17,8 @@ contract Zero is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ownable {
 
     uint public maxSupply = 42;
     uint public maxMint = 2;
-    uint public numTokensMinted;
 
-    string[5] private colors = ["#F0D8A8","#3D1C00","#86B8B1","#F2D694","#FA2A00"];
+    string[5] private colors = ["#0B110D","#2C4D56","#C3AA72","#DC7612","#BD3200"];
 
     function random(string memory input) internal pure returns (uint256) {
         return uint256(keccak256(abi.encodePacked(input)));
@@ -71,12 +70,8 @@ contract Zero is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ownable {
         string memory itemId = string(abi.encodePacked(newItemId));
         string memory name = string(abi.encodePacked("Zero: ", Strings.toString(newItemId)));
         string memory svg = getSVG(itemId);
-
         string memory json = Base64.encode(bytes(string(abi.encodePacked('{"name": "', name,'", "description": "weeeee", "image": "data:image/svg+xml;base64,', Base64.encode(bytes(svg)),'"}'))));
-        
-        string memory finalTokenUri = string(
-            abi.encodePacked("data:application/json;base64,", json)
-        );
+        string memory finalTokenUri = string(abi.encodePacked("data:application/json;base64,", json));
 
         console.log("\n--------------------");
         console.log(finalTokenUri);
