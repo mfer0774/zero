@@ -19,30 +19,33 @@ contract Zero is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ownable {
     uint public maxMint = 2;
     uint public numTokensMinted;
 
-    string[22] private firstNames = ["","","","","","","","","","","","","","","","","","","","","",""];
-    string[22] private lastNames = ["","","","","","","","","","","","","","","","","","","","","",""];
-    string[5] private colors = ["","","","",""];
+    string[5] private colors = ["#F0D8A8","#3D1C00","#86B8B1","#F2D694","#FA2A00"];
 
     function random(string memory input) internal pure returns (uint256) {
         return uint256(keccak256(abi.encodePacked(input)));
     }
 
-    function getRandomColor() {
-
+    function getRandomColor(string memory input) internal view returns (string memory) {
+        uint256 rand = random(input);
+        rand = rand % colors.length;
+        return colors[rand];
     }
 
-    function getSVG() internal view returns (string memory) {
-        string svgOne = "<svg viewBox='0 0 90 90' fill='none' role='img' xmlns='http://www.w3.org/2000/svg' width='350' height='350'>";
-        string svgTwo = "<mask id='mask' maskUnits='userSpaceOnUse' x='0' y='0' width='90' height='90'><rect width='90' height='90' rx='180' fill='#FFFFFF'></rect></mask><g mask='url(#mask)'>";
-        string svgThree = string("<path d='M0 0h90v45H0z' fill='", getRandomColor(), "'></path>");
-        string svgFour = string("<path d='M0 45h90v45H0z' fill='", getRandomColor(), "'></path>");
-        string svgFive = string("<path d='M83 45a38 38 0 00-76 0h76z' fill='", getRandomColor(), "'></path>");
-        string svgSix = string("<path d='M83 45a38 38 0 01-76 0h76z' fill='", getRandomColor(), "'></path>");
-        string svgSeven = string("<path d='M77 45a32 32 0 10-64 0h64z' fill='", getRandomColor(), "'></path>");
-        string svgEight = string("<path d='M77 45a32 32 0 11-64 0h64z' fill='", getRandomColor(), "'></path>");
-        string svgNine = string("<path d='M71 45a26 26 0 00-52 0h52z' fill='", getRandomColor(), "'></path>");
-        string svgTen = string("<path d='M71 45a26 26 0 01-52 0h52z' fill='", getRandomColor(), "'></path>");
-        string svgEleven = string("<circle cx='45' cy='45' r='23' fill='", getRandomColor(), "'></circle></g></svg>");
+    function getSVG(string memory itemId) internal view returns (string memory) {
+        string memory svgOne = "<svg viewBox='0 0 90 90' fill='none' role='img' xmlns='http://www.w3.org/2000/svg' width='350' height='350'>";
+        string memory svgTwo = "<mask id='mask' maskUnits='userSpaceOnUse' x='0' y='0' width='90' height='90'><rect width='90' height='90' rx='180' fill='#FFFFFF'></rect></mask><g mask='url(#mask)'>";
+        string memory svgThree = string(abi.encodePacked("<path d='M0 0h90v45H0z' fill='", getRandomColor(string(abi.encodePacked("three",itemId))), "'></path>"));
+        string memory svgFour = string(abi.encodePacked("<path d='M0 45h90v45H0z' fill='", getRandomColor(string(abi.encodePacked("four", itemId))), "'></path>"));
+        string memory svgFive = string(abi.encodePacked("<path d='M83 45a38 38 0 00-76 0h76z' fill='", getRandomColor(string(abi.encodePacked("five", itemId))), "'></path>"));
+        string memory svgSix = string(abi.encodePacked("<path d='M83 45a38 38 0 01-76 0h76z' fill='", getRandomColor(string(abi.encodePacked("six", itemId))), "'></path>"));
+        string memory svgSeven = string(abi.encodePacked("<path d='M77 45a32 32 0 10-64 0h64z' fill='", getRandomColor(string(abi.encodePacked("seven", itemId))), "'></path>"));
+        string memory svgEight = string(abi.encodePacked("<path d='M77 45a32 32 0 11-64 0h64z' fill='", getRandomColor(string(abi.encodePacked("eight", itemId))), "'></path>"));
+        string memory svgNine = string(abi.encodePacked("<path d='M71 45a26 26 0 00-52 0h52z' fill='", getRandomColor(string(abi.encodePacked("nine", itemId))), "'></path>"));
+        string memory svgTen = string(abi.encodePacked("<path d='M71 45a26 26 0 01-52 0h52z' fill='", getRandomColor(string(abi.encodePacked("ten", itemId))), "'></path>"));
+        string memory svgEleven = string(abi.encodePacked("<circle cx='45' cy='45' r='23' fill='", getRandomColor(string(abi.encodePacked("eleven", itemId))), "'></circle></g></svg>"));
+        string memory finalSvg = string(abi.encodePacked(svgOne, svgTwo, svgThree, svgFour, svgFive, svgSix, svgSeven, svgEight, svgNine, svgTen, svgEleven));
+
+        return finalSvg;
     }
 
     constructor() ERC721("Zero", "ZRO") {}
@@ -65,8 +68,22 @@ contract Zero is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ownable {
 
     function mint() public {
         uint256 newItemId = _tokenIdCounter.current();
+        string memory itemId = string(abi.encodePacked(newItemId));
+        string memory name = string(abi.encodePacked("Zero: ", Strings.toString(newItemId)));
+        string memory svg = getSVG(itemId);
+
+        string memory json = Base64.encode(bytes(string(abi.encodePacked('{"name": "', name,'", "description": "weeeee", "image": "data:image/svg+xml;base64,', Base64.encode(bytes(svg)),'"}'))));
+        
+        string memory finalTokenUri = string(
+            abi.encodePacked("data:application/json;base64,", json)
+        );
+
+        console.log("\n--------------------");
+        console.log(finalTokenUri);
+        console.log("--------------------\n");
+
         _safeMint(msg.sender, newItemId);
-        _setTokenURI(newItemId, "data:application/json;base64,ewogICJuYW1lIjogInplcm8iLAogICJkZXNjcmlwdGlvbiI6ICJ0aGUgZmlyc3Qgb25lIiwKICJpbWFnZSI6ImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjJhV1YzUW05NFBTSXdJREFnT0RBZ09EQWlJR1pwYkd3OUltNXZibVVpSUhKdmJHVTlJbWx0WnlJZ2VHMXNibk05SW1oMGRIQTZMeTkzZDNjdWR6TXViM0puTHpJd01EQXZjM1puSWlCM2FXUjBhRDBpT0RBaUlHaGxhV2RvZEQwaU9EQWlQZ29nSUNBZ1BIUnBkR3hsUGsxaGNua2dRbUZyWlhJOEwzUnBkR3hsUGdvZ0lDQWdQRzFoYzJzZ2FXUTlJbTFoYzJ0ZlgySmhkV2hoZFhNaUlHMWhjMnRWYm1sMGN6MGlkWE5sY2xOd1lXTmxUMjVWYzJVaUlIZzlJakFpSUhrOUlqQWlJSGRwWkhSb1BTSTRNQ0lnYUdWcFoyaDBQU0k0TUNJK0NpQWdJQ0FnSUNBZ1BISmxZM1FnZDJsa2RHZzlJamd3SWlCb1pXbG5hSFE5SWpnd0lpQm1hV3hzUFNJalJrWkdSa1pHSWo0OEwzSmxZM1ErQ2lBZ0lDQThMMjFoYzJzK0NpQWdJQ0E4WnlCdFlYTnJQU0oxY213b0kyMWhjMnRmWDJKaGRXaGhkWE1wSWo0S0lDQWdJQ0FnSUNBOGNtVmpkQ0IzYVdSMGFEMGlPREFpSUdobGFXZG9kRDBpT0RBaUlHWnBiR3c5SWlNMFlqVXpPR0lpUGp3dmNtVmpkRDRLSUNBZ0lDQWdJQ0E4Y21WamRDQjRQU0l4TUNJZ2VUMGlNekFpSUhkcFpIUm9QU0k0TUNJZ2FHVnBaMmgwUFNJNE1DSWdabWxzYkQwaUl6RTFNVGt4WkNJZ2RISmhibk5tYjNKdFBTSjBjbUZ1YzJ4aGRHVW9MVGdnTFRncElISnZkR0YwWlNnek1qQWdOREFnTkRBcElqNDhMM0psWTNRK0NpQWdJQ0FnSUNBZ1BHTnBjbU5zWlNCamVEMGlOREFpSUdONVBTSTBNQ0lnWm1sc2JEMGlJMlkzWVRJeFlpSWdjajBpTVRZaUlIUnlZVzV6Wm05eWJUMGlkSEpoYm5Oc1lYUmxLQzB6SUMwektTSStQQzlqYVhKamJHVStDaUFnSUNBZ0lDQWdQR05wY21Oc1pTQmplRDBpTkRBaUlHTjVQU0kwTUNJZ1ptbHNiRDBpSTJVME5UWXpOU0lnY2owaU1USWlJSFJ5WVc1elptOXliVDBpZEhKaGJuTnNZWFJsS0RRMUlEY3lLU0krUEM5amFYSmpiR1UrQ2lBZ0lDQWdJQ0FnUEd4cGJtVWdlREU5SWpBaUlIa3hQU0kwTUNJZ2VESTlJamd3SWlCNU1qMGlOREFpSUhOMGNtOXJaUzEzYVdSMGFEMGlNaUlnYzNSeWIydGxQU0lqWlRRMU5qTTFJaUIwY21GdWMyWnZjbTA5SW5SeVlXNXpiR0YwWlNnd0lEQXBJSEp2ZEdGMFpTZ3lPREFnTkRBZ05EQXBJajQ4TDJ4cGJtVStDaUFnSUNBOEwyYytDand2YzNablBnPT0iCn0=");
+        _setTokenURI(newItemId, finalTokenUri);
         _tokenIdCounter.increment();
 
         console.log("An NFT w/ ID %s has been minted to %s", newItemId, msg.sender);
