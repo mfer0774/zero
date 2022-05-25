@@ -25,7 +25,39 @@ async function main() {
 
   txn = await zero.mint();
   await txn.wait();
-  console.log("Minted NFT#4");
+  console.log("Minted NFT#5");
+
+  txn = await zero.mint();
+  await txn.wait();
+  console.log("Minted NFT#6");
+
+  txn = await zero.mint();
+  await txn.wait();
+  console.log("Minted NFT#7");
+
+  txn = await zero.mint();
+  await txn.wait();
+  console.log("Minted NFT#8");
+
+  txn = await zero.mint();
+  await txn.wait();
+  console.log("Minted NFT#9");
+
+  txn = await zero.mint();
+  await txn.wait();
+  console.log("Minted NFT#10");
+
+  txn = await zero.mint();
+  await txn.wait();
+  console.log("Minted NFT#11");
+
+  txn = await zero.mint();
+  await txn.wait();
+  console.log("Minted NFT#12");
+
+  txn = await zero.mint();
+  await txn.wait();
+  console.log("Minted NFT#13");
 
 }
 
