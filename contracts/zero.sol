@@ -15,8 +15,8 @@ contract Zero is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
-    uint public maxSupply = 42;
-    uint public maxMint = 2;
+    uint256 public maxSupply = 42;
+    uint256 public numTokensMinted;
 
     string[5] private colors = ["#0B110D","#2C4D56","#C3AA72","#DC7612","#BD3200"];
 
@@ -80,6 +80,7 @@ contract Zero is ERC721, ERC721Enumerable, ERC721URIStorage, Pausable, Ownable {
         _safeMint(msg.sender, newItemId);
         _setTokenURI(newItemId, finalTokenUri);
         _tokenIdCounter.increment();
+        numTokensMinted += 1;
 
         console.log("An NFT w/ ID %s has been minted to %s", newItemId, msg.sender);
     }
